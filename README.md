@@ -2,7 +2,9 @@
 
 **A phone-first, self-hosted control app for BTicino/Legrand MyHOME lights and shades.**
 
-Grasshopper Home is a standalone replacement for a legacy Raspberry Pi control page. It talks to a MyHOME F455 gateway using OpenWebNet, monitors bus feedback, and serves a small responsive web interface on a private network.
+The original Grasshopper home-control app ran on a Raspberry Pi. HomeBus Control is a clean new implementation of that use case, focused on Docker Compose deployment on an Unraid NAS. It talks to a MyHOME F455 gateway using OpenWebNet, monitors bus feedback, and serves a responsive web interface on a private network. It carries forward the home's control needs, not the old application's code.
+
+**Origin:** Original Grasshopper project: [https://github.com/bozzy-gh/grasshopper](https://github.com/bozzy-gh/grasshopper)
 
 > Personal project in active development. The current Unraid deployment is operating against a real F455 installation. Light and shade controls, physical-switch state updates, and whole-home All OFF/All ON have been tested on that installation. Hardware, wiring, device setup, and gateway firmware vary; do not assume compatibility without commissioning against your own system.
 
@@ -109,7 +111,7 @@ This is being developed as a product, not just as a code sample:
 
 ## Relationship to the original Grasshopper
 
-HomeBus Control is a new implementation inspired by the behavior and use case of [Grasshopper by bozzy-gh](https://github.com/bozzy-gh/grasshopper). It does not include the legacy application's PHP/Python implementation. The original repository is GPL-3.0 licensed; this rewrite is separately licensed under GPL-3.0-only. Third-party dependencies keep their own licenses.
+HomeBus Control takes inspiration from the behavior and use case of [Grasshopper by bozzy-gh](https://github.com/bozzy-gh/grasshopper). The original project ran on a Raspberry Pi; this rewrite is designed for Docker Compose on Unraid. It does not include the legacy application's PHP/Python implementation. The original repository is GPL-3.0 licensed; this rewrite is separately licensed under GPL-3.0-only. Third-party dependencies keep their own licenses.
 
 ## Security and privacy
 
@@ -122,4 +124,5 @@ HomeBus Control is a new implementation inspired by the behavior and use case of
 ## License
 
 This project is licensed under **GNU General Public License v3.0 only (GPL-3.0-only)**. See [LICENSE](LICENSE) for the complete terms. Recipients may use, modify, and redistribute the project under those terms; if they distribute a modified version, the GPL requires preserving the recipients' corresponding freedoms. GPL permits charging for distribution. Third-party dependencies retain their own licenses; see their package metadata and notices.
+
 
