@@ -12,6 +12,8 @@ The original Grasshopper home-control app ran on a Raspberry Pi. HomeBus Control
 
 The original interface could lose track of device state and was difficult to use from a phone. This rewrite makes reported bus state authoritative, shows unknown or stale state honestly, and keeps the user interface focused on everyday controls. The project is also a hands-on example of product management combined with AI-assisted software development.
 
+HomeBus Control is intentionally a small, standalone application rather than a Home Assistant add-on or integration. Home Assistant is a much broader home-automation platform and already has community MyHOME integrations; this project explores a focused interface and deployment for one MyHOME installation.
+
 ## Current features
 
 - Responsive, phone-first light and shade controls grouped by room.
@@ -113,6 +115,8 @@ This is being developed as a product, not just as a code sample:
 
 HomeBus Control takes inspiration from the behavior and use case of [Grasshopper by bozzy-gh](https://github.com/bozzy-gh/grasshopper). The original project ran on a Raspberry Pi; this rewrite is designed for Docker Compose on Unraid. It does not include the legacy application's PHP/Python implementation. The original repository is GPL-3.0 licensed; this rewrite is separately licensed under GPL-3.0-only. Third-party dependencies keep their own licenses.
 
+Home Assistant users may also want to explore the community [OpenWebNet-HA MyHOME integration](https://github.com/OpenWebNet-HA/MyHOME). HomeBus Control is an independent, standalone project and is not affiliated with Home Assistant, OpenWebNet-HA, BTicino, or Legrand.
+
 ## Security and privacy
 
 - Bind the service to a trusted network interface and restrict access at the network level.
@@ -124,5 +128,6 @@ HomeBus Control takes inspiration from the behavior and use case of [Grasshopper
 ## License
 
 This project is licensed under **GNU General Public License v3.0 only (GPL-3.0-only)**. See [LICENSE](LICENSE) for the complete terms. Recipients may use, modify, and redistribute the project under those terms; if they distribute a modified version, the GPL requires preserving the recipients' corresponding freedoms. GPL permits charging for distribution. Third-party dependencies retain their own licenses; see their package metadata and notices.
+
 
 
