@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 8210)
-Total output lines: 730
-
 from __future__ import annotations
 
 import asyncio
@@ -324,7 +321,105 @@ class Monitor:
         operation["sent"] = 0
         operation["attempted"] = 0
         operation["failed"] = []
-        operation["confirmed"] …1210 tokens truncated…process_frame(self, raw: str) -> None:
+        operation["confirmed"] = []
+        operation["unconfirmed"] = []
+        operation["dispatch_seconds"] = None
+
+        try:
+            for index, device in enumerate(order):
+                target = dispatch_started
+                if len(order) > 1:
+                    target += ALL_LIGHTS_ON_DISPATCH_SECONDS * index / (len(order) - 1)
+                await asyncio.sleep(max(0.0, target - loop.time()))
+                operation["attempted"] = index + 1
+                address = device["address"]
+                what = dimmer_what(DEFAULT_DIMMER_LEVEL) if device["kind"] == "dimmer" else 1
+                frame = f"*1*{what}*{address}##"
+                try:
+                    acknowledgement = await self.send(frame)
+                    if acknowledgement is None or acknowledgement is False:
+                        raise RuntimeError("gateway did not acknowledge")
+                    operation["sent"] += 1
+                    log.info("Gateway acknowledged all-lights-on command for %s", device["name"])
+                except Exception as exc:
+                    self.cancel_pending(1, address, deadline)
+                    operation["failed"].append(device["name"])
+                    log.warning("All-lights-on command failed for %s (%s)", device["name"], type(exc).__name__)
+                    if not self.is_connected:
+                        for remaining in order[index + 1:]:
+                            self.cancel_pending(1, remaining["address"], deadline)
+                            operation["failed"].append(remaining["name"])
+                        operation["attempted"] = len(order)
+                        break
+
+            operation["dispatch_seconds"] = round(loop.time() - dispatch_started, 2)
+            operation["status"] = "confirming"
+            await asyncio.sleep(1.7)
+            for device in devices:
+                address = device["address"]
+                self.cancel_pending(1, address, deadline)
+                try:
+                    await self.send(f"*#1*{address}##")
+                    if device["kind"] == "dimmer":
+                        await asyncio.sleep(0.1)
+                        await self.send(f"*#1*{address}*1##")
+                    await asyncio.sleep(0.1)
+                except Exception as exc:
+                    log.warning("Could not query all-lights-on result for %s (%s)", device["name"], type(exc).__name__)
+            await asyncio.sleep(1.0)
+
+            with db() as connection:
+                for device in devices:
+                    row = connection.execute(
+                        "SELECT state, brightness, updated_at FROM device_state WHERE who=1 AND address=?",
+                        (device["address"],),
+                    ).fetchone()
+                    changed_report = row and row["updated_at"] and row["updated_at"] != before[device["address"]]
+                    is_on = row and row["state"] == "on"
+                    dimmer_confirmed = device["kind"] != "dimmer" or (
+                        row and row["brightness"] is not None and 40 <= row["brightness"] <= 70
+                    )
+                    if changed_report and is_on and dimmer_confirmed:
+                        operation["confirmed"].append(device["name"])
+                    else:
+                        operation["unconfirmed"].append(device["name"])
+            operation["status"] = "complete"
+            operation["finished_at"] = now_iso()
+        except Exception as exc:
+            operation["status"] = "failed"
+            operation["error"] = "All ON operation could not be completed"
+            operation["finished_at"] = now_iso()
+            log.exception("All-lights-on operation failed (%s)", type(exc).__name__)
+        finally:
+            self.cancel_lights_pending(deadline)
+
+    async def resolve_command(self, who: int, address: str, kind: str, deadline: float) -> None:
+        await asyncio.sleep(1.7)
+        pending = self._pending.get((who, address))
+        if pending is None or pending[2] != deadline:
+            return
+        self._pending.pop((who, address), None)
+        try:
+            await self.send(f"*#{who}*{address}##")
+            if kind == "dimmer":
+                await asyncio.sleep(0.1)
+                await self.send(f"*#1*{address}*1##")
+        except HTTPException:
+            pass
+
+    async def resolve_all_lights(self, deadline: float | None = None) -> None:
+        await asyncio.sleep(1.7)
+        if deadline is not None and not any(value[2] == deadline for key, value in self._pending.items() if key[0] == 1):
+            return
+        for key, value in list(self._pending.items()):
+            if key[0] == 1 and value[2] == deadline:
+                self._pending.pop(key, None)
+        try:
+            await self.refresh_all_lights()
+        except HTTPException:
+            pass
+
+    async def process_frame(self, raw: str) -> None:
         raw = raw.strip()
         if not raw.startswith("*") or not raw.endswith("##"):
             return
