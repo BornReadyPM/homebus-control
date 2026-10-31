@@ -1,0 +1,13 @@
+{
+  "rooms": [
+    {
+      "name": "Living room",
+      "devices": [
+        {"who": 1, "where": "11", "name": "Ceiling light", "kind": "light"},
+        {"who": 1, "where": "12", "name": "Reading light", "kind": "dimmer"},
+        {"who": 2, "where": "21", "name": "Window shade", "kind": "shade"}
+      ]
+    }
+  ]
+}
+

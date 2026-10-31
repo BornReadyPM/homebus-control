@@ -1,0 +1,6 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
+# Pin the current v2 pre-release for its Python 3.11+ F455 support and typed
+# event/command sessions. Revisit this pin when v2 is stable.
+OWNd==2.0.0b11
+

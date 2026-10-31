@@ -1,0 +1,22 @@
+services:
+  grasshopper:
+    build: .
+    container_name: grasshopper-next
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_PATH: /data/grasshopper.sqlite3
+      DEVICE_CONFIG: /config/devices.json
+    ports:
+      - "${LAN_BIND_IP:-127.0.0.1}:9999:8000"
+    volumes:
+      - ./data:/data
+      - ./config:/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+

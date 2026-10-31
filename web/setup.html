@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f6f2">
+  <title>Grasshopper settings</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="back-link" href="/">‹ <span>Controls</span></a><div class="brand brand-center"><span class="brand-mark">g</span><div><strong>Setup</strong><small>Rooms and devices</small></div></div><span class="top-spacer"></span></header>
+  <main class="page-wrap setup-wrap">
+    <section class="setup-intro"><p class="eyebrow">HOME CONFIGURATION</p><h1>Rooms & devices</h1><p class="muted">Edit the labels and OpenWebNet addresses used on your control page. Gateway credentials are managed in Unraid and are never shown here.</p></section>
+    <div class="setup-toolbar"><button id="add-device" class="secondary-button">＋ Add device</button><button id="resync" class="secondary-button">↻ Refresh states</button></div>
+    <div class="table-scroll"><div id="device-list" class="device-editor"></div></div>
+    <div class="savebar"><span id="setup-message" role="status"></span><button id="save" class="primary-button">Save setup</button></div>
+    <section class="diagnostics"><div class="diagnostics-heading"><div><p class="eyebrow">LIVE DIAGNOSTICS · LAST 300 RETAINED</p><h2>Recent bus reports</h2></div><span id="setup-connection" class="connection"><i></i><span>Connecting</span></span></div><div id="events" class="event-list"><p class="muted">No bus reports received yet.</p></div></section>
+  </main>
+  <script src="/assets/setup.js" defer></script>
+</body>
+</html>
+

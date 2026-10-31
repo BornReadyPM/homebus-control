@@ -1,0 +1,35 @@
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+
+# Private installation configuration and calibration data
+/config/devices.json
+/timings.txt
+/docs/github-profile-draft.md
+
+# Runtime state, logs, and local backups
+/data/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+/backup/
+*.sql
+*.dump
+*.dump.sql
+*.img
+
+# Python local files
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
